@@ -2,6 +2,12 @@
 name = "pomocli"
 version = "0.1.0"
 edition = "2024"
+description = "A sleek, interactive Pomodoro CLI with ambient sound support and YouTube integration."
+license = "MIT"
+repository = "https://github.com/burakzaferozcan/pomocli"
+readme = "README.md"
+keywords = ["pomodoro", "timer", "cli", "productivity", "focus"]
+categories = ["command-line-utilities", "productivity"]
 
 [dependencies]
 clap = { version = "4.6.0", features = ["derive"] }

@@ -2,8 +2,6 @@
 
 A sleek, interactive Pomodoro CLI with ambient sound support and YouTube integration. Stay focused and productive with a beautiful terminal interface.
 
-![Pomodoro CLI Screenshot](https://raw.githubusercontent.com/burakzaferozcan/pomocli/main/assets/screenshot.png) *(Note: Placeholder for actual screenshot)*
-
 ## ✨ Features
 
 - ⏱️ **Interactive Pomodoro Timer**: Easily set work and break durations.

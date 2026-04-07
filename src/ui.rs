@@ -1,6 +1,6 @@
-use indicatif::{ProgressBar, ProgressStyle};
 use crate::timer::{TimerMode, TimerStatus};
 use crate::utils::format_duration;
+use indicatif::{ProgressBar, ProgressStyle};
 
 pub struct UI {
     pb: ProgressBar,
@@ -36,14 +36,10 @@ impl UI {
         };
 
         let time_str = format_duration(current_seconds);
-        
+
         let msg = format!(
             "{} [{}] | {} | {} | 🔄 Cycle: {} | [p: pause | r: resume | q: quit]",
-            mode_icon,
-            mode_label,
-            status_part,
-            time_str,
-            cycle
+            mode_icon, mode_label, status_part, time_str, cycle
         );
 
         // Update style with correct colors and chars
@@ -57,12 +53,11 @@ impl UI {
             .progress_chars("━╾─"),
         );
 
-        self.pb.set_position(self.pb.length().unwrap() - current_seconds);
+        self.pb
+            .set_position(self.pb.length().unwrap() - current_seconds);
         self.pb.set_message(msg);
         self.pb.tick();
     }
-
-
 
     pub fn reset(&self, total_seconds: u64) {
         self.pb.set_length(total_seconds);

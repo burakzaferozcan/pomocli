@@ -1,22 +1,27 @@
+use crossterm::{
+    cursor,
+    event::{self, Event, KeyCode},
+    execute,
+    terminal::{self, ClearType, disable_raw_mode, enable_raw_mode},
+};
 use std::io;
 use std::time::Duration;
-use crossterm::{
-    event::{self, Event, KeyCode},
-    terminal::{self, disable_raw_mode, enable_raw_mode, ClearType},
-    execute, cursor,
-};
 use tokio::time::interval;
 
 use crate::prompt::AppConfig;
+use crate::sound::SoundController;
 use crate::timer::{PomodoroTimer, TimerMode};
 use crate::ui::UI;
-use crate::sound::SoundController;
 
 pub async fn run(config: AppConfig) -> io::Result<()> {
     enable_raw_mode()?;
 
     // Clear terminal before starting the timer UI
-    execute!(io::stdout(), terminal::Clear(ClearType::All), cursor::MoveTo(0, 0))?;
+    execute!(
+        io::stdout(),
+        terminal::Clear(ClearType::All),
+        cursor::MoveTo(0, 0)
+    )?;
 
     let mut current_cycle = 1;
     let mut timer = PomodoroTimer::new(TimerMode::Work, config.work_duration);
@@ -42,11 +47,9 @@ pub async fn run(config: AppConfig) -> io::Result<()> {
                             ui.finish();
 
                             // Check cycles
-                            if let Some(max_cycles) = config.cycles {
-                                if current_cycle >= max_cycles {
-                                    println!("\nPomodoro finished! Great job.");
-                                    break;
-                                }
+                            if config.cycles.is_some_and(|max| current_cycle >= max) {
+                                println!("\nPomodoro finished! Great job.");
+                                break;
                             }
 
                             println!("\n✔ Work finished! ☕ Break time");
@@ -61,7 +64,7 @@ pub async fn run(config: AppConfig) -> io::Result<()> {
                             ui.finish();
                             current_cycle += 1;
                             println!("\n☕ Break finished! 🧠 Back to work");
-                            
+
                             // Start Work
                             timer = PomodoroTimer::new(TimerMode::Work, config.work_duration);
                             ui.reset(timer.initial_seconds);
@@ -72,22 +75,23 @@ pub async fn run(config: AppConfig) -> io::Result<()> {
             }
             res = tokio::task::spawn_blocking(|| event::poll(Duration::from_millis(50))) => {
                 if let Ok(Ok(true)) = res {
-                    if let Ok(Event::Key(key)) = event::read() {
-                        match key.code {
-                            KeyCode::Char('q') => {
-                                println!("\nQuitting...");
-                                break;
-                            }
-                            KeyCode::Char('p') => {
-                                timer.pause();
-                                sound_ctrl.pause();
-                            }
-                            KeyCode::Char('r') => {
-                                timer.resume();
-                                sound_ctrl.resume();
-                            }
-                            _ => {}
+                    let Ok(Event::Key(key)) = event::read() else {
+                        continue;
+                    };
+                    match key.code {
+                        KeyCode::Char('q') => {
+                            println!("\nQuitting...");
+                            break;
                         }
+                        KeyCode::Char('p') => {
+                            timer.pause();
+                            sound_ctrl.pause();
+                        }
+                        KeyCode::Char('r') => {
+                            timer.resume();
+                            sound_ctrl.resume();
+                        }
+                        _ => {}
                     }
                 }
             }

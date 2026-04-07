@@ -2,12 +2,8 @@ use std::process::Command;
 
 /// Check if mpv is installed on the system.
 pub fn is_mpv_available() -> bool {
-    Command::new("mpv")
-        .arg("--version")
-        .output()
-        .is_ok()
+    Command::new("mpv").arg("--version").output().is_ok()
 }
-
 
 /// Format seconds into mm:ss
 pub fn format_duration(seconds: u64) -> String {

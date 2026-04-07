@@ -1,9 +1,9 @@
+mod app;
 mod cli;
 mod prompt;
-mod timer;
 mod sound;
+mod timer;
 mod ui;
-mod app;
 mod utils;
 
 #[tokio::main]
@@ -16,7 +16,7 @@ async fn main() -> std::io::Result<()> {
     }
 
     let config = prompt::run_prompts();
-    
+
     if let Err(e) = app::run(config).await {
         eprintln!("Application error: {}", e);
     }

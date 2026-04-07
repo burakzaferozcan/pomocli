@@ -1,5 +1,5 @@
-use std::process::{Child, Command, Stdio};
 use crate::prompt::SoundType;
+use std::process::{Child, Command, Stdio};
 
 pub struct SoundController {
     process: Option<Child>,

@@ -1,4 +1,4 @@
-use dialoguer::{theme::ColorfulTheme, Input, Select};
+use dialoguer::{Input, Select, theme::ColorfulTheme};
 
 pub enum SoundType {
     BuiltIn(String),
@@ -42,7 +42,13 @@ pub fn run_prompts() -> AppConfig {
         cycles_input.parse::<u32>().ok()
     };
 
-    let sound_options = vec!["None", "Rain (Built-in)", "Fireplace (Built-in)", "Cafe (Built-in)", "YouTube Link"];
+    let sound_options = vec![
+        "None",
+        "Rain (Built-in)",
+        "Fireplace (Built-in)",
+        "Cafe (Built-in)",
+        "YouTube Link",
+    ];
     let selection = Select::with_theme(&theme)
         .with_prompt("Select background sound")
         .items(&sound_options)
@@ -67,8 +73,12 @@ pub fn run_prompts() -> AppConfig {
                 })
                 .interact_text()
                 .unwrap_or_default();
-            if link.is_empty() { SoundType::None } else { SoundType::Youtube(link) }
-        },
+            if link.is_empty() {
+                SoundType::None
+            } else {
+                SoundType::Youtube(link)
+            }
+        }
         _ => SoundType::None,
     };
 

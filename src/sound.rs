@@ -14,7 +14,23 @@ impl SoundController {
         self.stop();
 
         let cmd_args = match sound {
-            SoundType::BuiltIn(name) => vec![format!("assets/{}", name)],
+            SoundType::BuiltIn(name) => {
+                let bytes: &[u8] = match name.as_str() {
+                    "rain.mp3" => include_bytes!("../assets/rain.mp3"),
+                    "fireplace.mp3" => include_bytes!("../assets/fireplace.mp3"),
+                    "cafe.mp3" => include_bytes!("../assets/cafe.mp3"),
+                    _ => &[],
+                };
+
+                let mut temp_path = std::env::temp_dir();
+                temp_path.push(format!("pomocli_{}", name));
+
+                if !temp_path.exists() && !bytes.is_empty() {
+                    let _ = std::fs::write(&temp_path, bytes);
+                }
+
+                vec![temp_path.to_string_lossy().to_string()]
+            }
             SoundType::Youtube(link) => vec![link.clone()],
             SoundType::None => return,
         };

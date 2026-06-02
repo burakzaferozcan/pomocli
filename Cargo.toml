@@ -1,6 +1,6 @@
 [package]
 name = "pomocli"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 description = "A sleek, interactive Pomodoro CLI with ambient sound support and YouTube integration."
 license = "MIT"
